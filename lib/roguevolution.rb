@@ -3,6 +3,7 @@ require "roguevolution/creatures/kobold"
 require "roguevolution/creatures/ooze"
 
 require "roguevolution/a_star_node"
+require "roguevolution/announcements"
 require "roguevolution/point"
 require "roguevolution/rect"
 require "roguevolution/fov"

@@ -10,9 +10,9 @@ class GameWindow < Gosu::Window
   TILE_SIZE = 32
 
   GAME_WIDTH = 480
-  GAME_HEIGHT = 600
+  GAME_HEIGHT = 540
   GUI_WIDTH = 320
-  GUI_HEIGHT = 600
+  GUI_HEIGHT = 540
 
   def initialize
     super(800, 600, false)
@@ -35,6 +35,7 @@ class GameWindow < Gosu::Window
   def draw
     render_dungeon
     render_ui
+    render_announcements
   end
 
   def update
@@ -144,6 +145,15 @@ class GameWindow < Gosu::Window
     player_traits.each_with_index do |trait, index|
     @font.draw("x#{trait[1]} - #{trait[0]}", zx, zy + 70 + index * 14,
                Roguevolution::ZIndex::UI)
+    end
+  end
+
+  def render_announcements
+    zx = 10
+    zy = GAME_HEIGHT + 10
+    messages = Roguevolution::Announcements.messages.reverse.slice(0..2)
+    messages.each_with_index do |message, i|
+      @font.draw(message, zx, zy + 14 * i, Roguevolution::ZIndex::UI)
     end
   end
 

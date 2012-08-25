@@ -26,7 +26,10 @@ module Roguevolution
 
     def award_trait(creature)
       trait = creature.traits.sample
-      @traits << trait unless trait.nil?
+      unless trait.nil?
+        Announcements.messages << trait.message
+        @traits << trait
+      end
     end
 
     def damage_die
