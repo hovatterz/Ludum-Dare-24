@@ -1,12 +1,18 @@
 module Roguevolution
   class Creature
-    attr_reader :health, :tile_type, :position, :unarmed_attack_die
+    attr_reader :health, :tile_type, :position, :unarmed_attack_die,
+      :traits
 
     def initialize(dungeon, hit_die, unarmed_attack_die, tile_type)
       @dungeon, @tile_type, @unarmed_attack_die = dungeon, tile_type, unarmed_attack_die
       @awake = false
       @health = RNG.max_roll(hit_die)
       @position = Point.new
+      @traits = []
+    end
+
+    def armor
+      @traits.collect {|trait| trait.defense_modifier }.inject(0, :+)
     end
 
     def attack(creature)
@@ -15,6 +21,18 @@ module Roguevolution
 
     def alive?
       @health > 0
+    end
+
+    def award_trait(creature)
+      @traits << creature.traits.sample
+    end
+
+    def damage_die
+      @unarmed_attack_die
+    end
+
+    def damage_modifier
+      @traits.collect {|trait| trait.unarmed_modifier }.inject(0, :+)
     end
 
     def inflict(damage)
@@ -58,7 +76,7 @@ module Roguevolution
     private
 
     def roll_damage
-      RNG.roll(@unarmed_attack_die)
+      RNG.roll(damage_die) + damage_modifier
     end
   end
 end

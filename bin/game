@@ -61,6 +61,7 @@ class GameWindow < Gosu::Window
     @dungeon.current_floor.creatures.each do |creature|
       if creature.alive?
       else
+        @player.award_trait(creature)
         @dungeon.current_floor.creatures.delete(creature)
         tile = @dungeon.tile_at(creature.position.x, creature.position.y)
         tile.creature = nil
@@ -113,10 +114,26 @@ class GameWindow < Gosu::Window
   end
 
   def render_ui
+    player_traits = Hash[@player.traits.map {|trait| [trait.name, ] }]
+    player_traits = @player.traits.inject(Hash.new(0)) {|h, x|
+      h[x.name] += 1
+      h
+    }.to_a.sort
+
+    player_damage = "#{@player.damage_die} + #{@player.damage_modifier}"
+
     zx = GAME_WIDTH + 10
     zy = 10
     @font.draw("Name: #{@player.name}", zx, zy, Roguevolution::ZIndex::UI)
     @font.draw("Health: #{@player.health}", zx, zy + 14, Roguevolution::ZIndex::UI)
+    @font.draw("Damage: #{player_damage}", zx, zy + 28, Roguevolution::ZIndex::UI)
+    @font.draw("Armor: #{@player.armor}", zx, zy + 42, Roguevolution::ZIndex::UI)
+
+    @font.draw("Traits:", zx, zy + 56, Roguevolution::ZIndex::UI)
+    player_traits.each_with_index do |trait, index|
+    @font.draw("x#{trait[1]} - #{trait[0]}", zx, zy + 70 + index * 14,
+               Roguevolution::ZIndex::UI)
+    end
   end
 
   def key_group_pressed?(group)
