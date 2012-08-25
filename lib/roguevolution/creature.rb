@@ -5,8 +5,21 @@ module Roguevolution
     def initialize(dungeon, hit_die, tile_type)
       @dungeon = dungeon
       @tile_type = tile_type
+      @awake = false
       @health = RNG.roll(hit_die)
       @position = Point.new
+    end
+
+    def awake?
+      @awake == true
+    end
+
+    def awaken
+      @awake = true
+    end
+
+    def sleep
+      @awake = false
     end
 
     def move(x, y)

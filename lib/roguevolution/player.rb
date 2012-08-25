@@ -9,6 +9,7 @@ module Roguevolution
       super(dungeon, HIT_DIE, TILE)
       set_position(dungeon.current_floor.player_start.x,
                    dungeon.current_floor.player_start.y)
+      awaken
     end
   end
 end
