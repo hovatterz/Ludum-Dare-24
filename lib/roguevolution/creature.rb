@@ -1,11 +1,11 @@
 module Roguevolution
   class Creature
     attr_reader :health, :max_health, :tile_type, :unarmed_attack_die,
-      :traits
+      :traits, :name
     attr_accessor :position
 
-    def initialize(dungeon, hit_die, unarmed_attack_die, tile_type)
-      @dungeon, @tile_type, @unarmed_attack_die = dungeon, tile_type, unarmed_attack_die
+    def initialize(dungeon, name, hit_die, unarmed_attack_die, tile_type)
+      @dungeon, @name, @tile_type, @unarmed_attack_die = dungeon, name, tile_type, unarmed_attack_die
       @max_health = RNG.max_roll(hit_die)
       @health = @max_health
       @position = Point.new
@@ -17,7 +17,21 @@ module Roguevolution
     end
 
     def attack(creature)
-      creature.inflict(self, roll_damage)
+      damage = roll_damage
+      creature.inflict(self, damage)
+      if player?
+        Announcements.messages << "You hit a #{creature.name} for #{damage} damage."
+      else
+        Announcements.messages << "A #{name} hits you for #{damage} damage."
+      end
+
+      unless creature.alive?
+        if player?
+          Announcements.messages << "You kill a #{creature.name}."
+        else
+          Announcements.messages << "A #{name} kills you."
+        end
+      end
     end
 
     def alive?

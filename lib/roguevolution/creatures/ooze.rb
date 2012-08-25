@@ -6,7 +6,7 @@ module Roguevolution
       TILE = :ooze
 
       def initialize(dungeon)
-        super(dungeon, HIT_DIE, UNARMED_ATTACK_DIE, TILE)
+        super(dungeon, "Ooze", HIT_DIE, UNARMED_ATTACK_DIE, TILE)
         @traits << Trait::AcidicBlood.new
       end
     end

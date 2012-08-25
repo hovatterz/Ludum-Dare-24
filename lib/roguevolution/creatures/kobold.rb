@@ -6,7 +6,7 @@ module Roguevolution
       TILE = :kobold
 
       def initialize(dungeon)
-        super(dungeon, HIT_DIE, UNARMED_ATTACK_DIE, TILE)
+        super(dungeon, "Kobold", HIT_DIE, UNARMED_ATTACK_DIE, TILE)
         @traits << Trait::LeatherSkin.new
         @traits << Trait::Claws.new
       end

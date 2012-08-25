@@ -21,7 +21,7 @@ class GameWindow < Gosu::Window
     @dungeon = Roguevolution::Dungeon.new(5, 50, 50)
     @dungeon.generate!
 
-    @player = Roguevolution::Player.new(@dungeon)
+    @player = Roguevolution::Player.new(@dungeon, "Player")
 
     @tiles = Gosu::Image.load_tiles(self, "media/tiles.png", TILE_SIZE, TILE_SIZE, true)
 

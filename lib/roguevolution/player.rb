@@ -4,15 +4,13 @@ module Roguevolution
     UNARMED_ATTACK_DIE = "1d4"
     TILE = :player
 
-    attr_accessor :name, :turn_taken
+    attr_accessor :turn_taken
 
-    def initialize(dungeon)
-      super(dungeon, HIT_DIE, UNARMED_ATTACK_DIE, TILE)
+    def initialize(dungeon, name)
+      super(dungeon, name, HIT_DIE, UNARMED_ATTACK_DIE, TILE)
       set_position(dungeon.current_floor.player_start.x,
                    dungeon.current_floor.player_start.y)
       reset_turn
-
-      @name = "Player"
     end
 
     def hostile?(creature)
