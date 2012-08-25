@@ -83,7 +83,7 @@ class GameWindow < Gosu::Window
   private
 
   def key_group_pressed?(group)
-    group.take_while {|id| button_down?(id) }.length > 0
+    group.select {|id| button_down?(id) }.length > 0
   end
 end
 
