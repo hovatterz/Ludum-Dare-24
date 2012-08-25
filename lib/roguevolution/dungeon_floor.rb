@@ -23,6 +23,18 @@ module Roguevolution
       @player_start = generator.player_start
     end
 
+    def save(file_name)
+      File.open(file_name, "w") do |file|
+        @height.times do |y|
+          @width.times do |x|
+            file << "\n" if x == 0
+            file << "#" if @tiles[[x, y]].type == :wall
+            file << "." if @tiles[[x, y]].type == :floor
+          end
+        end
+      end
+    end
+
     def passable?(x, y)
       @tiles[[x, y]].passable? rescue false
     end
