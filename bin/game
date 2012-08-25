@@ -10,28 +10,26 @@ class GameWindow < Gosu::Window
   TILE_SIZE = 32
 
   def initialize
-    super(640, 480, false, 8.333333)
+    super(640, 480, false)
     self.caption = "Roguevolution - Ludum Dare 24 Project"
 
     @dungeon = Roguevolution::Dungeon.new(5, 50, 50)
     @dungeon.generate!
 
-    @player = Roguevolution::Player.new
-    floor = @dungeon.current_floor
-    @player.set_position(floor.player_start.x, floor.player_start.y)
+    @player = Roguevolution::Player.new(@dungeon)
 
     @tiles = Gosu::Image.load_tiles(self, "media/tiles.png", TILE_SIZE, TILE_SIZE, true)
 
     @fov = Roguevolution::FOV.new(@dungeon)
 
     @kobold = Roguevolution::Creatures::Kobold.new(@dungeon)
-    @kobold.set_position(@player.x + 1, @player.y)
+    @kobold.set_position(@player.position.x + 1, @player.position.y)
   end
 
   def draw
     half_width = (width / 2 / TILE_SIZE).round
     half_height = (height / 2 / TILE_SIZE).round
-    center = Roguevolution::Point.new(@player.x, @player.y)
+    center = @player.position
 
     i, j = 0, 0
     ((center.x - half_width)..(center.x + half_width)).each do |x|
@@ -40,12 +38,12 @@ class GameWindow < Gosu::Window
         next unless tile
         tile_type = Roguevolution::Tilebank[tile.type] rescue Roguevolution::Tilebank[:wall]
         color = if tile.lit?
-          Gosu::Color::WHITE
-        elsif tile.seen?
-          Gosu::Color::GRAY
-        else
-          Gosu::Color::NONE
-        end
+                  Gosu::Color::WHITE
+                elsif tile.seen?
+                  Gosu::Color::GRAY
+                else
+                  Gosu::Color::NONE
+                end
 
         @tiles[tile_type].draw(i * TILE_SIZE, j * TILE_SIZE, Roguevolution::ZIndex::DUNGEON, 1, 1, color)
         unless tile.creature.nil?
@@ -57,31 +55,29 @@ class GameWindow < Gosu::Window
       i += 1
       j = 0
     end
-
-    @tiles[Roguevolution::Tilebank[:player]].draw(half_width * TILE_SIZE, half_height * TILE_SIZE, Roguevolution::ZIndex::PLAYER)
   end
 
   def update
     if key_group_pressed?([Gosu::KbLeft, Gosu::KbNumpad4, Gosu::KbH])
-      @player.move(@dungeon, -1, 0)
+      @player.move(-1, 0)
     elsif key_group_pressed?([Gosu::KbRight, Gosu::KbNumpad6, Gosu::KbL])
-      @player.move(@dungeon, 1, 0)
+      @player.move(1, 0)
     elsif key_group_pressed?([Gosu::KbUp, Gosu::KbNumpad8, Gosu::KbK])
-      @player.move(@dungeon, 0, -1)
+      @player.move(0, -1)
     elsif key_group_pressed?([Gosu::KbDown, Gosu::KbNumpad2, Gosu::KbJ])
-      @player.move(@dungeon, 0, 1)
+      @player.move(0, 1)
     elsif key_group_pressed?([Gosu::KbNumpad7, Gosu::KbY])
-      @player.move(@dungeon, -1, -1)
+      @player.move(-1, -1)
     elsif key_group_pressed?([Gosu::KbNumpad9, Gosu::KbU])
-      @player.move(@dungeon, 1, -1)
+      @player.move(1, -1)
     elsif key_group_pressed?([Gosu::KbNumpad1, Gosu::KbB])
-      @player.move(@dungeon, -1, 1)
+      @player.move(-1, 1)
     elsif key_group_pressed?([Gosu::KbNumpad3, Gosu::KbN])
-      @player.move(@dungeon, 1, 1)
+      @player.move(1, 1)
     end
 
     @dungeon.darken
-    @fov.calculate(Roguevolution::Point.new(@player.x, @player.y), 10)
+    @fov.calculate(@player.position, 10)
   end
 
   private
