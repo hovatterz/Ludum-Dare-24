@@ -1,6 +1,6 @@
 module Roguevolution
   class Tile < AStarNode
-    attr_accessor :creature
+    attr_accessor :creature, :bloody
     attr_reader :type, :symbol, :passable, :transparent
 
     def initialize(floor, position, type)
@@ -13,6 +13,10 @@ module Roguevolution
 
     def mutate!(type)
       set_type(type)
+    end
+
+    def bloody?
+      @bloody == true
     end
     
     def lit?

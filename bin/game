@@ -47,6 +47,10 @@ class GameWindow < Gosu::Window
                 end
 
         @tiles[tile_type].draw(i * TILE_SIZE, j * TILE_SIZE, Roguevolution::ZIndex::DUNGEON, 1, 1, color)
+        if tile.bloody?
+          @tiles[Roguevolution::Tilebank[:blood]].draw(i * TILE_SIZE, j * TILE_SIZE, Roguevolution::ZIndex::DUNGEON_FEATURE, 1, 1, color)
+        end
+
         unless tile.creature.nil?
           @tiles[Roguevolution::Tilebank[tile.creature.tile_type]].draw(i * TILE_SIZE, j * TILE_SIZE, Roguevolution::ZIndex::DUNGEON, 1, 1, color)
         end
@@ -80,8 +84,10 @@ class GameWindow < Gosu::Window
     @dungeon.current_floor.creatures.each do |creature|
       if creature.alive?
       else
-        @dungeon.tile_at(creature.position.x, creature.position.y).creature = nil
         @dungeon.current_floor.creatures.delete(creature)
+        tile = @dungeon.tile_at(creature.position.x, creature.position.y)
+        tile.creature = nil
+        tile.bloody = true
       end
     end
 

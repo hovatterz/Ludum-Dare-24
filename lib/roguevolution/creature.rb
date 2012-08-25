@@ -18,7 +18,6 @@ module Roguevolution
     end
 
     def inflict(damage)
-      puts "New Health: #{@health - damage}"
       @health -= damage
     end
 

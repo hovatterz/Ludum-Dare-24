@@ -1,6 +1,6 @@
 module Roguevolution
   class Tilebank
-    TILES = [:player, :wall, :floor, :kobold]
+    TILES = [:player, :wall, :floor, :blood, :kobold]
 
     def self.[](type)
       TILES.find_index(type)
