@@ -6,7 +6,7 @@ module Roguevolution
       @width = width
       @height = height
       @current_floor = 0
-      @floors = [].fill(DungeonFloor.new(@width, @height), 0, num_floors)
+      @floors = [].fill(DungeonFloor.new(self, @width, @height), 0, num_floors)
     end
 
     def generate!

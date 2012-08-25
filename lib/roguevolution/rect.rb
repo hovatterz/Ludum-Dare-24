@@ -22,5 +22,9 @@ module Roguevolution
       @x <= other.x + other.x2 and @x2 >= other.x and
       @y <= other.y + other.y2 and @y2 >= other.y
     end
+
+    def random_point
+      Point.new(Random.rand((@x + 1)..@x2), Random.rand((@y + 1)..@y2))
+    end
   end
 end

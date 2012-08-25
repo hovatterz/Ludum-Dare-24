@@ -1,10 +1,10 @@
 module Roguevolution
   class DungeonFloor
-    attr_reader :width, :height, :tiles, :player_start, :creatures
+    attr_reader :dungeon, :width, :height, :tiles, :player_start,
+      :creatures
 
-    def initialize(width, height)
-      @width = width
-      @height = height
+    def initialize(dungeon, width, height)
+      @dungeon, @width, @height = dungeon, width, height
       @tiles = {}
       @creatures = []
     end
@@ -18,10 +18,11 @@ module Roguevolution
     end
 
     def generate!
-      generator = DungeonGenerator.new(self, @width, @height)
+      generator = DungeonGenerator.new(@dungeon, @width, @height)
       generator.generate!
       @tiles = generator.tiles
       @player_start = generator.player_start
+      @creatures = generator.creatures
     end
 
     def save(file_name)

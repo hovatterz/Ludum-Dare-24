@@ -1,7 +1,7 @@
 module Roguevolution
   class Creature
-    attr_reader :health, :tile_type, :position, :unarmed_attack_die,
-      :traits
+    attr_reader :health, :tile_type, :unarmed_attack_die, :traits
+    attr_accessor :position
 
     def initialize(dungeon, hit_die, unarmed_attack_die, tile_type)
       @dungeon, @tile_type, @unarmed_attack_die = dungeon, tile_type, unarmed_attack_die

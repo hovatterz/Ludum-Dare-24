@@ -1,22 +1,25 @@
 module Roguevolution
   class DungeonGenerator
-    attr_reader :tiles, :player_start
+    attr_reader :tiles, :player_start, :creatures
 
-    MIN_ROOM_SIZE = 6
+    MIN_ROOM_SIZE = 3
     MAX_ROOM_SIZE = 12
     MAX_NUM_ROOMS = 100
+    MIN_CREATURE_SPAWNS = 1
+    MAX_CREATURE_SPAWNS = 4
 
-    def initialize(floor, width, height)
-      @floor, @width, @height = floor, width, height
+    def initialize(dungeon, width, height)
+      @dungeon, @width, @height = dungeon, width, height
       @tiles = {}
       @rooms = {}
+      @creatures = []
     end
 
     def generate!
       # Fill with walls
       @width.times do |x|
         @height.times do |y|
-          @tiles[[x, y]] = Tile.new(@floor, Point.new(x, y), :wall)
+          @tiles[[x, y]] = Tile.new(@dungeon.current_floor, Point.new(x, y), :wall)
         end
       end
 
@@ -54,6 +57,20 @@ module Roguevolution
               create_v_tunnel(old_center.y, new_center.y, old_center.x)
               create_h_tunnel(old_center.x, new_center.x, new_center.y)
             end
+          end
+
+          num_creatures = Random.rand(MIN_CREATURE_SPAWNS..MAX_CREATURE_SPAWNS)
+          num_creatures.times do
+            position = nil
+            until position
+              random_position = new_room[:rect].random_point
+              position = random_position unless @tiles[[random_position.x, random_position.y]].creature
+            end
+
+            creature = Creatures::Kobold.new(@dungeon)
+            creature.position = position
+            @tiles[[position.x, position.y]].creature = creature
+            @creatures << creature
           end
 
           @rooms[new_room[:rect]] = new_room
