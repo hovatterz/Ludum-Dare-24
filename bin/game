@@ -27,6 +27,8 @@ class GameWindow < Gosu::Window
     @player.set_position(floor.player_start.x, floor.player_start.y)
 
     @tiles = Gosu::Image.load_tiles(self, "media/tiles.png", TILE_SIZE, TILE_SIZE, true)
+
+    @fov = Roguevolution::FOV.new(@dungeon)
   end
 
   def draw
@@ -37,8 +39,18 @@ class GameWindow < Gosu::Window
     i, j = 0, 0
     ((center.x - half_width)..(center.x + half_width)).each do |x|
       ((center.y - half_height)..(center.y + half_height)).each do |y|
-        tile_type = TILES[@dungeon.tile_at(x, y).type] rescue TILES[:wall]
-        @tiles[tile_type].draw(i * TILE_SIZE, j * TILE_SIZE, Roguevolution::ZIndex::DUNGEON)
+        tile = @dungeon.tile_at(x, y)
+        next unless tile
+        tile_type = TILES[tile.type] rescue TILES[:wall]
+        color = if tile.lit?
+          Gosu::Color::WHITE
+        elsif tile.seen?
+          Gosu::Color::GRAY
+        else
+          Gosu::Color::NONE
+        end
+
+        @tiles[tile_type].draw(i * TILE_SIZE, j * TILE_SIZE, Roguevolution::ZIndex::DUNGEON, 1, 1, color)
         j += 1
       end
       i += 1
@@ -66,6 +78,9 @@ class GameWindow < Gosu::Window
     elsif key_group_pressed?([Gosu::KbNumpad3, Gosu::KbN])
       @player.move(@dungeon, 1, 1)
     end
+
+    @dungeon.darken
+    @fov.calculate(Roguevolution::Point.new(@player.x, @player.y), 10)
   end
 
   private

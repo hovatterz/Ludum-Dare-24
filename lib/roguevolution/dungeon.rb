@@ -19,6 +19,12 @@ module Roguevolution
       @floors[@current_floor]
     end
 
+    def darken
+      current_floor.each_tile do |x, y|
+        tile_at(x, y).unlight
+      end
+    end
+
     def tile_at(x, y)
       @floors[@current_floor].tiles[[x, y]]
     end
