@@ -27,10 +27,6 @@ class GameWindow < Gosu::Window
 
     @fov = Roguevolution::FOV.new(@dungeon)
 
-    @kobold = Roguevolution::Creatures::Kobold.new(@dungeon)
-    @kobold.set_position(@player.position.x + 1, @player.position.y)
-    @dungeon.current_floor.creatures << @kobold
-
     @font = Gosu::Font.new(self, "Arial", 14)
   end
 
@@ -103,6 +99,7 @@ class GameWindow < Gosu::Window
         end
 
         unless tile.creature.nil?
+          tile.creature.awaken
           @tiles[Roguevolution::Tilebank[tile.creature.tile_type]].draw(i * TILE_SIZE, j * TILE_SIZE, Roguevolution::ZIndex::CREATURE, 1, 1, color)
         end
 
