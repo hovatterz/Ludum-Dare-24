@@ -11,6 +11,8 @@ module Roguevolution
       set_position(dungeon.current_floor.player_start.x,
                    dungeon.current_floor.player_start.y)
       awaken
+
+      @name = "Player"
     end
 
     def hostile?(creature)

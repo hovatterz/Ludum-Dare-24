@@ -9,8 +9,13 @@ class GameWindow < Gosu::Window
   FONT_HEIGHT = 16
   TILE_SIZE = 32
 
+  GAME_WIDTH = 480
+  GAME_HEIGHT = 600
+  GUI_WIDTH = 320
+  GUI_HEIGHT = 600
+
   def initialize
-    super(640, 480, false)
+    super(800, 600, false)
     self.caption = "Roguevolution - Ludum Dare 24 Project"
 
     @dungeon = Roguevolution::Dungeon.new(5, 50, 50)
@@ -25,41 +30,13 @@ class GameWindow < Gosu::Window
     @kobold = Roguevolution::Creatures::Kobold.new(@dungeon)
     @kobold.set_position(@player.position.x + 1, @player.position.y)
     @dungeon.current_floor.creatures << @kobold
+
+    @font = Gosu::Font.new(self, "Arial", 14)
   end
 
   def draw
-    half_width = (width / 2 / TILE_SIZE).round
-    half_height = (height / 2 / TILE_SIZE).round
-    center = @player.position
-
-    i, j = 0, 0
-    ((center.x - half_width)..(center.x + half_width)).each do |x|
-      ((center.y - half_height)..(center.y + half_height)).each do |y|
-        tile = @dungeon.tile_at(x, y)
-        next unless tile
-        tile_type = Roguevolution::Tilebank[tile.type] rescue Roguevolution::Tilebank[:wall]
-        color = if tile.lit?
-                  Gosu::Color::WHITE
-                elsif tile.seen?
-                  Gosu::Color::GRAY
-                else
-                  Gosu::Color::NONE
-                end
-
-        @tiles[tile_type].draw(i * TILE_SIZE, j * TILE_SIZE, Roguevolution::ZIndex::DUNGEON, 1, 1, color)
-        if tile.bloody?
-          @tiles[Roguevolution::Tilebank[:blood]].draw(i * TILE_SIZE, j * TILE_SIZE, Roguevolution::ZIndex::DUNGEON_FEATURE, 1, 1, color)
-        end
-
-        unless tile.creature.nil?
-          @tiles[Roguevolution::Tilebank[tile.creature.tile_type]].draw(i * TILE_SIZE, j * TILE_SIZE, Roguevolution::ZIndex::DUNGEON, 1, 1, color)
-        end
-
-        j += 1
-      end
-      i += 1
-      j = 0
-    end
+    render_dungeon
+    render_ui
   end
 
   def update
@@ -96,6 +73,51 @@ class GameWindow < Gosu::Window
   end
 
   private
+  
+  def render_dungeon
+    half_width = (GAME_WIDTH / 2 / TILE_SIZE).round
+    half_height = (GAME_HEIGHT / 2 / TILE_SIZE).round
+    center = @player.position
+
+    i, j = 0, 0
+    ((center.x - half_width)..(center.x + half_width)).each do |x|
+      ((center.y - half_height)..(center.y + half_height)).each do |y|
+        tile = @dungeon.tile_at(x, y)
+        unless tile
+          j += 1
+          next
+        end
+        tile_type = Roguevolution::Tilebank[tile.type] rescue Roguevolution::Tilebank[:wall]
+        color = if tile.lit?
+                  Gosu::Color::WHITE
+                elsif tile.seen?
+                  Gosu::Color::GRAY
+                else
+                  Gosu::Color::NONE
+                end
+
+        @tiles[tile_type].draw(i * TILE_SIZE, j * TILE_SIZE, Roguevolution::ZIndex::DUNGEON, 1, 1, color)
+        if tile.bloody?
+          @tiles[Roguevolution::Tilebank[:blood]].draw(i * TILE_SIZE, j * TILE_SIZE, Roguevolution::ZIndex::DUNGEON_FEATURE, 1, 1, color)
+        end
+
+        unless tile.creature.nil?
+          @tiles[Roguevolution::Tilebank[tile.creature.tile_type]].draw(i * TILE_SIZE, j * TILE_SIZE, Roguevolution::ZIndex::CREATURE, 1, 1, color)
+        end
+
+        j += 1
+      end
+      i += 1
+      j = 0
+    end
+  end
+
+  def render_ui
+    zx = GAME_WIDTH + 10
+    zy = 10
+    @font.draw("Name: #{@player.name}", zx, zy, Roguevolution::ZIndex::UI)
+    @font.draw("Health: #{@player.health}", zx, zy + 14, Roguevolution::ZIndex::UI)
+  end
 
   def key_group_pressed?(group)
     group.select {|id| button_down?(id) }.length > 0
