@@ -23,18 +23,30 @@ class GameWindow < Gosu::Window
     @dungeon.generate!
 
     @player = Roguevolution::Player.new
+    floor = @dungeon.floors[@player.current_floor]
+    @player.set_position(floor.player_start.x, floor.player_start.y)
 
     @tiles = Gosu::Image.load_tiles(self, "media/tiles.png", TILE_SIZE, TILE_SIZE, true)
   end
 
   def draw
+    half_width = (width / 2 / TILE_SIZE).round
+    half_height = (height / 2 / TILE_SIZE).round
+    center = Roguevolution::Point.new(@player.x, @player.y)
+
+    i, j = 0, 0
     floor = @dungeon.floors[@player.current_floor]
-    floor.each_tile do |x, y|
-      tile_type = TILES[floor.tiles[[x, y]].type]
-      @tiles[tile_type].draw(x * TILE_SIZE, y * TILE_SIZE, Roguevolution::ZIndex::DUNGEON)
+    ((center.x - half_width)..(center.x + half_width)).each do |x|
+      ((center.y - half_height)..(center.y + half_height)).each do |y|
+        tile_type = TILES[floor.tiles[[x, y]].type] rescue TILES[:wall]
+        @tiles[tile_type].draw(i * TILE_SIZE, j * TILE_SIZE, Roguevolution::ZIndex::DUNGEON)
+        j += 1
+      end
+      i += 1
+      j = 0
     end
 
-    @tiles[TILES[:player]].draw(@player.x * TILE_SIZE, @player.y * TILE_SIZE, Roguevolution::ZIndex::PLAYER)
+    @tiles[TILES[:player]].draw(half_width * TILE_SIZE, half_height * TILE_SIZE, Roguevolution::ZIndex::PLAYER)
   end
 
   def update

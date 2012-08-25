@@ -16,5 +16,9 @@ module Roguevolution
         @y = pot_y
       end
     end
+
+    def set_position(x, y)
+      @x, @y = x, y
+    end
   end
 end

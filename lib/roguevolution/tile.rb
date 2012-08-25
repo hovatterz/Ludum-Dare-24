@@ -8,6 +8,10 @@ module Roguevolution
       set_type(type)
     end
 
+    def mutate!(type)
+      set_type(type)
+    end
+
     def passable?
       passable == true
     end

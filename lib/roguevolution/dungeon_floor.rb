@@ -1,6 +1,6 @@
 module Roguevolution
   class DungeonFloor
-    attr_reader :width, :height, :tiles
+    attr_reader :width, :height, :tiles, :player_start
 
     def initialize(width, height)
       @width = width
@@ -17,12 +17,10 @@ module Roguevolution
     end
 
     def generate!
-      @width.times do |x|
-        @height.times do |y|
-          tile_type = Tile::TYPES[Random.rand(0...Tile::TYPES.length)]
-          @tiles[[x, y]] = Tile.new(tile_type)
-        end
-      end
+      generator = DungeonGenerator.new(@width, @height)
+      generator.generate!
+      @tiles = generator.tiles
+      @player_start = generator.player_start
     end
 
     def passable?(x, y)
