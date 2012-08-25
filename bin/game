@@ -40,13 +40,13 @@ class GameWindow < Gosu::Window
   end
 
   def button_down(id)
-    if id == Gosu::KbLeft || id == Gosu::KbNumpad4
+    if [Gosu::KbLeft, Gosu::KbNumpad4, Gosu::KbH].include?(id)
       @player.move(@dungeon, -1, 0)
-    elsif id == Gosu::KbRight || id == Gosu::KbNumpad6
+    elsif [Gosu::KbRight, Gosu::KbNumpad6, Gosu::KbL].include?(id)
       @player.move(@dungeon, 1, 0)
-    elsif id == Gosu::KbUp || id == Gosu::KbNumpad8
+    elsif [Gosu::KbUp, Gosu::KbNumpad8, Gosu::KbK].include?(id)
       @player.move(@dungeon, 0, -1)
-    elsif id == Gosu::KbDown || id == Gosu::KbNumpad2
+    elsif [Gosu::KbDown, Gosu::KbNumpad2, Gosu::KbJ].include?(id)
       @player.move(@dungeon, 0, 1)
     end
   end
