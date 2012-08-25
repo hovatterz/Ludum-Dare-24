@@ -19,6 +19,10 @@ module Roguevolution
       true
     end
 
+    def player?
+      true
+    end
+
     def move(x, y)
       @turn_taken = super(x, y)
     end

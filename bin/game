@@ -28,6 +28,8 @@ class GameWindow < Gosu::Window
     @fov = Roguevolution::FOV.new(@dungeon)
 
     @font = Gosu::Font.new(self, "Arial", 14)
+    @last_moved = 0
+    @last_frame = Gosu::milliseconds
   end
 
   def draw
@@ -36,6 +38,12 @@ class GameWindow < Gosu::Window
   end
 
   def update
+    calculate_delta
+
+    @last_moved += @delta
+    return unless @last_moved >= 50 / 1000.0
+    @last_moved = 0
+
     @player.reset_turn
     if key_group_pressed?([Gosu::KbLeft, Gosu::KbNumpad4, Gosu::KbH])
       @player.move(-1, 0)
@@ -67,10 +75,10 @@ class GameWindow < Gosu::Window
           tile.bloody = true
         end
       end
-
-      @dungeon.darken
-      @fov.calculate(@player.position, 10)
     end
+
+    @dungeon.darken
+    @fov.calculate(@player.position, 10)
   end
 
   private
@@ -139,6 +147,12 @@ class GameWindow < Gosu::Window
 
   def key_group_pressed?(group)
     group.select {|id| button_down?(id) }.length > 0
+  end
+
+  def calculate_delta
+    @this_frame = Gosu::milliseconds
+    @delta = (@this_frame - @last_frame) / 1000.0
+    @last_frame = @this_frame
   end
 end
 

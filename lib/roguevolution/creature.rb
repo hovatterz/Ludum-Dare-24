@@ -61,8 +61,12 @@ module Roguevolution
       @alerted = true
     end
 
+    def player?
+      false
+    end
+
     def hostile?(creature)
-      creature.tile_type == :player
+      creature.player?
     end
 
     def move(x, y)
