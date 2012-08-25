@@ -1,0 +1,42 @@
+#!/usr/bin/env ruby
+require "rubygems"
+require "bundler/setup"
+require "gosu"
+$LOAD_PATH << File.expand_path("../../lib", __FILE__)
+require "roguevolution"
+
+class GameWindow < Gosu::Window
+  FONT_HEIGHT = 16
+
+  TILES = {
+    :player => 0,
+    :wall => 1,
+    :floor => 2
+  }
+
+  def initialize
+    super(640, 480, false)
+    self.caption = "Roguevolution - Ludum Dare 24 Project"
+
+    @dungeon = Roguevolution::Dungeon.new(50, 50)
+    @dungeon.generate!
+
+    @player = Roguevolution::Player.new
+
+    @tiles = Gosu::Image.load_tiles(self, "media/tiles.png", 32, 32, true)
+  end
+
+  def draw
+    @dungeon.each_tile do |x, y|
+      @tiles[TILES[@dungeon.tiles[[x, y]].type]].draw(x * 32, y * 32, Roguevolution::ZIndex::DUNGEON)
+    end
+
+    @tiles[TILES[:player]].draw(@player.x * 32, @player.y * 32, Roguevolution::ZIndex::PLAYER)
+  end
+
+  def update
+  end
+end
+
+window = GameWindow.new
+window.show
