@@ -7,6 +7,7 @@ require "roguevolution"
 
 class GameWindow < Gosu::Window
   FONT_HEIGHT = 16
+  TILE_SIZE = 32
 
   TILES = {
     :player => 0,
@@ -23,17 +24,17 @@ class GameWindow < Gosu::Window
 
     @player = Roguevolution::Player.new
 
-    @tiles = Gosu::Image.load_tiles(self, "media/tiles.png", 32, 32, true)
+    @tiles = Gosu::Image.load_tiles(self, "media/tiles.png", TILE_SIZE, TILE_SIZE, true)
   end
 
   def draw
     floor = @dungeon.floors[@player.current_floor]
     floor.each_tile do |x, y|
       tile_type = TILES[floor.tiles[[x, y]].type]
-      @tiles[tile_type].draw(x * 32, y * 32, Roguevolution::ZIndex::DUNGEON)
+      @tiles[tile_type].draw(x * TILE_SIZE, y * TILE_SIZE, Roguevolution::ZIndex::DUNGEON)
     end
 
-    @tiles[TILES[:player]].draw(@player.x * 32, @player.y * 32, Roguevolution::ZIndex::PLAYER)
+    @tiles[TILES[:player]].draw(@player.x * TILE_SIZE, @player.y * TILE_SIZE, Roguevolution::ZIndex::PLAYER)
   end
 
   def update
