@@ -9,12 +9,6 @@ class GameWindow < Gosu::Window
   FONT_HEIGHT = 16
   TILE_SIZE = 32
 
-  TILES = {
-    :player => 0,
-    :wall => 1,
-    :floor => 2
-  }
-
   def initialize
     super(640, 480, false, 8.333333)
     self.caption = "Roguevolution - Ludum Dare 24 Project"
@@ -41,7 +35,7 @@ class GameWindow < Gosu::Window
       ((center.y - half_height)..(center.y + half_height)).each do |y|
         tile = @dungeon.tile_at(x, y)
         next unless tile
-        tile_type = TILES[tile.type] rescue TILES[:wall]
+        tile_type = Roguevolution::Tilebank[tile.type] rescue Roguevolution::Tilebank[:wall]
         color = if tile.lit?
           Gosu::Color::WHITE
         elsif tile.seen?
@@ -57,7 +51,7 @@ class GameWindow < Gosu::Window
       j = 0
     end
 
-    @tiles[TILES[:player]].draw(half_width * TILE_SIZE, half_height * TILE_SIZE, Roguevolution::ZIndex::PLAYER)
+    @tiles[Roguevolution::Tilebank[:player]].draw(half_width * TILE_SIZE, half_height * TILE_SIZE, Roguevolution::ZIndex::PLAYER)
   end
 
   def update

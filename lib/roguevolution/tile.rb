@@ -1,7 +1,5 @@
 module Roguevolution
   class Tile < AStarNode
-    TYPES = [:wall, :floor]
-
     attr_reader :type, :symbol, :passable, :transparent
 
     def initialize(floor, position, type)
@@ -66,7 +64,7 @@ module Roguevolution
     private
 
     def set_type(type)
-      raise ArgumentError, "Invalid type." unless TYPES.include?(type)
+      raise ArgumentError, "Invalid type." unless Tilebank.include?(type)
       @type = type
 
       if @type == :wall
