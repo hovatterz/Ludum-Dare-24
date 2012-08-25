@@ -48,6 +48,14 @@ class GameWindow < Gosu::Window
       @player.move(@dungeon, 0, -1)
     elsif [Gosu::KbDown, Gosu::KbNumpad2, Gosu::KbJ].include?(id)
       @player.move(@dungeon, 0, 1)
+    elsif [Gosu::KbNumpad7, Gosu::KbY].include?(id)
+      @player.move(@dungeon, -1, -1)
+    elsif [Gosu::KbNumpad9, Gosu::KbU].include?(id)
+      @player.move(@dungeon, 1, -1)
+    elsif [Gosu::KbNumpad1, Gosu::KbB].include?(id)
+      @player.move(@dungeon, -1, 1)
+    elsif [Gosu::KbNumpad3, Gosu::KbN].include?(id)
+      @player.move(@dungeon, 1, 1)
     end
   end
 end
