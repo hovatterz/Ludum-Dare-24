@@ -5,7 +5,7 @@ module Roguevolution
     def initialize(dungeon, hit_die, unarmed_attack_die, tile_type)
       @dungeon, @tile_type, @unarmed_attack_die = dungeon, tile_type, unarmed_attack_die
       @awake = false
-      @health = RNG.roll(hit_die)
+      @health = RNG.max_roll(hit_die)
       @position = Point.new
     end
 
