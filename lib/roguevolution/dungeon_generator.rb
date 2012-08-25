@@ -6,8 +6,8 @@ module Roguevolution
     MAX_ROOM_SIZE = 12
     MAX_NUM_ROOMS = 100
 
-    def initialize(width, height)
-      @width, @height = width, height
+    def initialize(floor, width, height)
+      @floor, @width, @height = floor, width, height
       @tiles = {}
       @rooms = {}
     end
@@ -16,7 +16,7 @@ module Roguevolution
       # Fill with walls
       @width.times do |x|
         @height.times do |y|
-          @tiles[[x, y]] = Tile.new(:wall)
+          @tiles[[x, y]] = Tile.new(@floor, Point.new(x, y), :wall)
         end
       end
 
