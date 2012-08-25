@@ -6,7 +6,6 @@ module Roguevolution
 
     def initialize(dungeon, hit_die, unarmed_attack_die, tile_type)
       @dungeon, @tile_type, @unarmed_attack_die = dungeon, tile_type, unarmed_attack_die
-      @awake = false
       @max_health = RNG.max_roll(hit_die)
       @health = @max_health
       @position = Point.new
@@ -54,16 +53,12 @@ module Roguevolution
       @health -= damage
     end
 
-    def awake?
-      @awake == true
+    def alerted?
+      @alerted == true
     end
 
-    def awaken
-      @awake = true
-    end
-
-    def sleep
-      @awake = false
+    def alert
+      @alerted = true
     end
 
     def hostile?(creature)
@@ -75,12 +70,15 @@ module Roguevolution
       tile = @dungeon.tile_at(pot_x, pot_y)
       if tile.creature != nil && tile.creature.hostile?(self)
         attack(tile.creature)
+        return true
       elsif tile.passable?
         @dungeon.tile_at(@position.x, @position.y).creature = nil
         @position.x = pot_x
         @position.y = pot_y
         tile.creature = self
+        return true
       end
+      false
     end
 
     def set_position(x, y)
@@ -88,7 +86,30 @@ module Roguevolution
       @dungeon.tile_at(@position.x, @position.y).creature = self
     end
 
+    def take_turn(player)
+      ai_wander
+      # if alerted?
+      #   ai_wander
+      # else
+      #   ai_chase(player)
+      # end
+    end
+
     private
+
+    def ai_wander
+      moved = false
+      tries = 0
+      until moved
+        break if tries > 2
+        rand_offset = Point.new(Random.rand(-1..1), Random.rand(-1..1))
+        moved = true if move(rand_offset.x, rand_offset.y)
+        tries += 1
+      end
+    end
+
+    def ai_chase(creature)
+    end
 
     def roll_damage
       RNG.roll(damage_die) + damage_modifier

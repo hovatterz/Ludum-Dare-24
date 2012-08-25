@@ -36,6 +36,7 @@ class GameWindow < Gosu::Window
   end
 
   def update
+    @player.reset_turn
     if key_group_pressed?([Gosu::KbLeft, Gosu::KbNumpad4, Gosu::KbH])
       @player.move(-1, 0)
     elsif key_group_pressed?([Gosu::KbRight, Gosu::KbNumpad6, Gosu::KbL])
@@ -54,19 +55,22 @@ class GameWindow < Gosu::Window
       @player.move(1, 1)
     end
 
-    @dungeon.current_floor.creatures.each do |creature|
-      if creature.alive?
-      else
-        @player.award_trait(creature)
-        @dungeon.current_floor.creatures.delete(creature)
-        tile = @dungeon.tile_at(creature.position.x, creature.position.y)
-        tile.creature = nil
-        tile.bloody = true
+    if @player.turn_taken?
+      @dungeon.current_floor.creatures.each do |creature|
+        if creature.alive?
+          creature.take_turn(@player)
+        else
+          @player.award_trait(creature)
+          @dungeon.current_floor.creatures.delete(creature)
+          tile = @dungeon.tile_at(creature.position.x, creature.position.y)
+          tile.creature = nil
+          tile.bloody = true
+        end
       end
-    end
 
-    @dungeon.darken
-    @fov.calculate(@player.position, 10)
+      @dungeon.darken
+      @fov.calculate(@player.position, 10)
+    end
   end
 
   private
@@ -99,7 +103,7 @@ class GameWindow < Gosu::Window
         end
 
         unless tile.creature.nil?
-          tile.creature.awaken
+          tile.creature.alert
           @tiles[Roguevolution::Tilebank[tile.creature.tile_type]].draw(i * TILE_SIZE, j * TILE_SIZE, Roguevolution::ZIndex::CREATURE, 1, 1, color)
         end
 
