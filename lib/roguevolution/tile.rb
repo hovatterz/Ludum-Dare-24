@@ -1,11 +1,13 @@
 module Roguevolution
   class Tile < AStarNode
+    attr_accessor :creature
     attr_reader :type, :symbol, :passable, :transparent
 
     def initialize(floor, position, type)
       @floor, @position = floor, position
       @lit = false
       @seen = false
+      @creature = nil
       set_type(type)
     end
 
@@ -31,11 +33,11 @@ module Roguevolution
     end
 
     def passable?
-      passable == true
+      @passable == true && @creature == nil
     end
 
     def transparent?
-      transparent == true
+      @transparent == true
     end
 
     # AStarNode stuff

@@ -3,6 +3,10 @@ module Roguevolution
     attr_accessor :x, :y
 
     def initialize(x=0,y=0)
+      set(x, y)
+    end
+
+    def set(x, y)
       @x = x
       @y = y
     end

@@ -17,7 +17,7 @@ module Roguevolution
     end
 
     def generate!
-      generator = DungeonGenerator.new(@width, @height)
+      generator = DungeonGenerator.new(self, @width, @height)
       generator.generate!
       @tiles = generator.tiles
       @player_start = generator.player_start
