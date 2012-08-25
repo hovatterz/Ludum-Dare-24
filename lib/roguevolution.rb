@@ -1,4 +1,5 @@
 require "roguevolution/z_index"
 require "roguevolution/player"
 require "roguevolution/dungeon"
+require "roguevolution/dungeon_floor"
 require "roguevolution/tile"

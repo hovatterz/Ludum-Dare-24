@@ -8,6 +8,14 @@ module Roguevolution
       set_type(type)
     end
 
+    def passable?
+      passable == true
+    end
+
+    def transparent?
+      transparent == true
+    end
+
     private
 
     def set_type(type)

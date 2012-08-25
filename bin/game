@@ -18,7 +18,7 @@ class GameWindow < Gosu::Window
     super(640, 480, false)
     self.caption = "Roguevolution - Ludum Dare 24 Project"
 
-    @dungeon = Roguevolution::Dungeon.new(50, 50)
+    @dungeon = Roguevolution::Dungeon.new(5, 50, 50)
     @dungeon.generate!
 
     @player = Roguevolution::Player.new
@@ -27,14 +27,28 @@ class GameWindow < Gosu::Window
   end
 
   def draw
-    @dungeon.each_tile do |x, y|
-      @tiles[TILES[@dungeon.tiles[[x, y]].type]].draw(x * 32, y * 32, Roguevolution::ZIndex::DUNGEON)
+    floor = @dungeon.floors[@player.current_floor]
+    floor.each_tile do |x, y|
+      tile_type = TILES[floor.tiles[[x, y]].type]
+      @tiles[tile_type].draw(x * 32, y * 32, Roguevolution::ZIndex::DUNGEON)
     end
 
     @tiles[TILES[:player]].draw(@player.x * 32, @player.y * 32, Roguevolution::ZIndex::PLAYER)
   end
 
   def update
+  end
+
+  def button_down(id)
+    if id == Gosu::KbLeft || id == Gosu::KbNumpad4
+      @player.move(@dungeon, -1, 0)
+    elsif id == Gosu::KbRight || id == Gosu::KbNumpad6
+      @player.move(@dungeon, 1, 0)
+    elsif id == Gosu::KbUp || id == Gosu::KbNumpad8
+      @player.move(@dungeon, 0, -1)
+    elsif id == Gosu::KbDown || id == Gosu::KbNumpad2
+      @player.move(@dungeon, 0, 1)
+    end
   end
 end
 

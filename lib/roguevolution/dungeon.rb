@@ -1,27 +1,16 @@
 module Roguevolution
   class Dungeon
-    attr_reader :tiles, :width, :height
+    attr_reader :floors, :width, :height
 
-    def initialize(width, height)
+    def initialize(num_floors, width, height)
       @width = width
       @height = height
-      @tiles = {}
-    end
-
-    def each_tile
-      @width.times do |x|
-        @height.times do |y|
-          yield(x, y)
-        end
-      end
+      @floors = [].fill(DungeonFloor.new(@width, @height), 0, num_floors)
     end
 
     def generate!
-      @width.times do |x|
-        @height.times do |y|
-          tile_type = Tile::TYPES[Random.rand(0...Tile::TYPES.length)]
-          @tiles[[x, y]] = Tile.new(tile_type)
-        end
+      @floors.each do |floor|
+        floor.generate!
       end
     end
   end
