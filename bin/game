@@ -122,7 +122,7 @@ class GameWindow < Gosu::Window
     zx = GAME_WIDTH + 10
     zy = 10
     @font.draw("Name: #{@player.name}", zx, zy, Roguevolution::ZIndex::UI)
-    @font.draw("Health: #{@player.health}", zx, zy + 14, Roguevolution::ZIndex::UI)
+    @font.draw("Health: #{@player.health} / #{@player.max_health}", zx, zy + 14, Roguevolution::ZIndex::UI)
     @font.draw("Damage: #{player_damage}", zx, zy + 28, Roguevolution::ZIndex::UI)
     @font.draw("Armor: #{@player.armor}", zx, zy + 42, Roguevolution::ZIndex::UI)
 

@@ -1,5 +1,6 @@
 require "roguevolution/creature"
 require "roguevolution/creatures/kobold"
+require "roguevolution/creatures/ooze"
 
 require "roguevolution/a_star_node"
 require "roguevolution/point"

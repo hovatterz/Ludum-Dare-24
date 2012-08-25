@@ -67,7 +67,12 @@ module Roguevolution
               position = random_position unless @tiles[[random_position.x, random_position.y]].creature
             end
 
-            creature = Creatures::Kobold.new(@dungeon)
+            creature_type = Random.rand(0..1)
+            if creature_type == 0
+              creature = Creatures::Ooze.new(@dungeon)
+            else
+              creature = Creatures::Kobold.new(@dungeon)
+            end
             creature.position = position
             @tiles[[position.x, position.y]].creature = creature
             @creatures << creature
@@ -80,7 +85,6 @@ module Roguevolution
     end
 
     private
-
 
     # Carves out a room
     def create_room(rect)

@@ -21,5 +21,21 @@ module Roguevolution
         @unarmed_modifier = 1
       end
     end
+
+    class AcidicBlood < Trait
+      DAMAGE_DIE = "1d2"
+
+      def self.roll_chance
+        Random.rand(0..2) == 0
+      end
+
+      def self.roll_damage
+        RNG.roll(DAMAGE_DIE)
+      end
+
+      def initialize
+        super("Acidic Blood")
+      end
+    end
   end
 end

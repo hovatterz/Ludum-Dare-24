@@ -1,12 +1,14 @@
 module Roguevolution
   class Creature
-    attr_reader :health, :tile_type, :unarmed_attack_die, :traits
+    attr_reader :health, :max_health, :tile_type, :unarmed_attack_die,
+      :traits
     attr_accessor :position
 
     def initialize(dungeon, hit_die, unarmed_attack_die, tile_type)
       @dungeon, @tile_type, @unarmed_attack_die = dungeon, tile_type, unarmed_attack_die
       @awake = false
-      @health = RNG.max_roll(hit_die)
+      @max_health = RNG.max_roll(hit_die)
+      @health = @max_health
       @position = Point.new
       @traits = []
     end
@@ -16,7 +18,7 @@ module Roguevolution
     end
 
     def attack(creature)
-      creature.inflict(roll_damage)
+      creature.inflict(self, roll_damage)
     end
 
     def alive?
@@ -24,7 +26,8 @@ module Roguevolution
     end
 
     def award_trait(creature)
-      @traits << creature.traits.sample
+      trait = creature.traits.sample
+      @traits << trait unless trait.nil?
     end
 
     def damage_die
@@ -35,7 +38,19 @@ module Roguevolution
       @traits.collect {|trait| trait.unarmed_modifier }.inject(0, :+)
     end
 
-    def inflict(damage)
+    def inflict(inflictor, damage)
+      num_acid = @traits.select {|trait|
+        trait.class == Trait::AcidicBlood
+      }.length
+
+      if inflictor && num_acid > 0
+        num_acid.times do
+          if Trait::AcidicBlood.roll_chance
+            inflictor.inflict(nil, Trait::AcidicBlood.roll_damage)
+          end
+        end
+      end
+
       @health -= damage
     end
 
