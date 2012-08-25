@@ -1,11 +1,12 @@
 module Roguevolution
   class DungeonFloor
-    attr_reader :width, :height, :tiles, :player_start
+    attr_reader :width, :height, :tiles, :player_start, :creatures
 
     def initialize(width, height)
       @width = width
       @height = height
       @tiles = {}
+      @creatures = []
     end
 
     def each_tile

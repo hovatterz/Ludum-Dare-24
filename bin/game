@@ -24,6 +24,7 @@ class GameWindow < Gosu::Window
 
     @kobold = Roguevolution::Creatures::Kobold.new(@dungeon)
     @kobold.set_position(@player.position.x + 1, @player.position.y)
+    @dungeon.current_floor.creatures << @kobold
   end
 
   def draw
@@ -74,6 +75,14 @@ class GameWindow < Gosu::Window
       @player.move(-1, 1)
     elsif key_group_pressed?([Gosu::KbNumpad3, Gosu::KbN])
       @player.move(1, 1)
+    end
+
+    @dungeon.current_floor.creatures.each do |creature|
+      if creature.alive?
+      else
+        @dungeon.tile_at(creature.position.x, creature.position.y).creature = nil
+        @dungeon.current_floor.creatures.delete(creature)
+      end
     end
 
     @dungeon.darken
