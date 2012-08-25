@@ -61,6 +61,8 @@ class GameWindow < Gosu::Window
       @player.move(-1, 1)
     elsif key_group_pressed?([Gosu::KbNumpad3, Gosu::KbN])
       @player.move(1, 1)
+    elsif key_group_pressed?([Gosu::KbW])
+      @player.turn_taken = true
     end
 
     if @player.turn_taken?
