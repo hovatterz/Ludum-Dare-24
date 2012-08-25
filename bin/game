@@ -50,26 +50,29 @@ class GameWindow < Gosu::Window
   end
 
   def update
-  end
-
-  def button_down(id)
-    if [Gosu::KbLeft, Gosu::KbNumpad4, Gosu::KbH].include?(id)
+    if key_group_pressed?([Gosu::KbLeft, Gosu::KbNumpad4, Gosu::KbH])
       @player.move(@dungeon, -1, 0)
-    elsif [Gosu::KbRight, Gosu::KbNumpad6, Gosu::KbL].include?(id)
+    elsif key_group_pressed?([Gosu::KbRight, Gosu::KbNumpad6, Gosu::KbL])
       @player.move(@dungeon, 1, 0)
-    elsif [Gosu::KbUp, Gosu::KbNumpad8, Gosu::KbK].include?(id)
+    elsif key_group_pressed?([Gosu::KbUp, Gosu::KbNumpad8, Gosu::KbK])
       @player.move(@dungeon, 0, -1)
-    elsif [Gosu::KbDown, Gosu::KbNumpad2, Gosu::KbJ].include?(id)
+    elsif key_group_pressed?([Gosu::KbDown, Gosu::KbNumpad2, Gosu::KbJ])
       @player.move(@dungeon, 0, 1)
-    elsif [Gosu::KbNumpad7, Gosu::KbY].include?(id)
+    elsif key_group_pressed?([Gosu::KbNumpad7, Gosu::KbY])
       @player.move(@dungeon, -1, -1)
-    elsif [Gosu::KbNumpad9, Gosu::KbU].include?(id)
+    elsif key_group_pressed?([Gosu::KbNumpad9, Gosu::KbU])
       @player.move(@dungeon, 1, -1)
-    elsif [Gosu::KbNumpad1, Gosu::KbB].include?(id)
+    elsif key_group_pressed?([Gosu::KbNumpad1, Gosu::KbB])
       @player.move(@dungeon, -1, 1)
-    elsif [Gosu::KbNumpad3, Gosu::KbN].include?(id)
+    elsif key_group_pressed?([Gosu::KbNumpad3, Gosu::KbN])
       @player.move(@dungeon, 1, 1)
     end
+  end
+
+  private
+
+  def key_group_pressed?(group)
+    group.take_while {|id| button_down?(id) }.length > 0
   end
 end
 
